@@ -1,5 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Participant, Message, AIConfig } from "../types";
+
+// Extend AIConfig to support Gemini model selection
+export type GeminiModel = "gemini-2.5-pro" | "gemini-2.5-flash" | "gemini-2.5-flash-lite";
 import { ParticipantRole, AIProvider } from "../types";
 
 const languageMap: { [key: string]: string } = {
@@ -106,9 +109,10 @@ async function callAI(
         if (!aiConfig.apiKey) {
             throw new Error("API_KEY is required for Google Gemini provider.");
         }
+        const model = (aiConfig as any).geminiModel || "gemini-2.5-flash";
         const ai = new GoogleGenAI({ apiKey: aiConfig.apiKey });
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model,
             contents: userPrompt,
             config: {
                 systemInstruction: systemInstruction,

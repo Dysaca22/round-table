@@ -153,13 +153,24 @@ const Settings: React.FC<SettingsProps> = ({
                                     <option value={AIProvider.LMSTUDIO}>LM Studio (Local)</option>
                                 </select>
                                 {aiConfig.provider === AIProvider.GEMINI && (
-                                    <input
-                                        type="password"
-                                        placeholder={t.aiProvider.apiKeyPlaceholder}
-                                        value={aiConfig.apiKey}
-                                        onChange={(e) => setAiConfig((prev) => ({ ...prev, apiKey: e.target.value }))}
-                                        className="w-full p-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
-                                    />
+                                    <>
+                                        <input
+                                            type="password"
+                                            placeholder={t.aiProvider.apiKeyPlaceholder}
+                                            value={aiConfig.apiKey}
+                                            onChange={(e) => setAiConfig((prev) => ({ ...prev, apiKey: e.target.value }))}
+                                            className="w-full p-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                        />
+                                        <select
+                                            value={aiConfig.geminiModel || "gemini-2.5-flash"}
+                                            onChange={(e) => setAiConfig((prev) => ({ ...prev, geminiModel: e.target.value }))}
+                                            className="w-full p-2 mt-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                        >
+                                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                                            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+                                        </select>
+                                    </>
                                 )}
                                 {aiConfig.provider === AIProvider.LMSTUDIO && (
                                     <div className="space-y-4">

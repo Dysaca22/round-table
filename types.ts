@@ -36,8 +36,11 @@ export enum AIProvider {
     LMSTUDIO = "LMSTUDIO",
 }
 
+export type GeminiModel = "gemini-2.5-pro" | "gemini-2.5-flash" | "gemini-2.5-flash-lite";
+
 export interface AIConfig {
     provider: AIProvider;
     apiKey: string;
     lmStudioPort: number;
+    geminiModel?: GeminiModel;
 }
