@@ -5,13 +5,38 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>AI Giants' Round Table</title>
         <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" href="/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'cream': '#F9F8F6',
+                            'gray-dark': '#1E1E1E',
+                            'accent': '#B08A79',
+                            'gray-light': '#D1D1D1',
+                        },
+                        fontFamily: {
+                            'sans': ['Bebas Neue', 'sans-serif'],
+                            'serif': ['Lora', 'serif'],
+                            'mono': ['Roboto Mono', 'monospace'],
+                        }
+                    }
+                }
+            }
+        </script>
+        <style type="text/tailwindcss">
+            @layer base {
+                h1, h2, h3, h4, h5, h6 {
+                    @apply font-sans uppercase;
+                }
+                p, a, span, li, blockquote {
+                    @apply font-serif;
+                }
+            }
+        </style>
         <script type="importmap">
             {
                 "imports": {
@@ -23,7 +48,7 @@
             }
         </script>
     </head>
-    <body>
+    <body class="bg-cream text-gray-dark">
         <div id="root"></div>
         <script type="module" src="/index.tsx"></script>
     </body>

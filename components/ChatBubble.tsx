@@ -12,23 +12,17 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, participant }) => {
     const isModerator = participant.id === "moderator";
 
     return (
-        <div className="flex items-start gap-4 p-4 animate-fade-in">
-            <div
-                className={`flex-shrink-0 h-10 w-10 flex items-center justify-center font-bold text-sm text-white rounded-full ${
-                    isModerator ? "bg-slate-600" : "bg-cyan-600"
-                }`}
-            >
-                {participant.avatar}
+        <div className="grid grid-cols-10 gap-6">
+            <div className="col-span-1 flex justify-center">
+                <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center border border-gray-light/80 rounded-full">
+                    <span className="font-mono text-sm text-gray-dark/80">{participant.avatar}</span>
+                </div>
             </div>
-            <div className="flex-1">
-                <p
-                    className={`font-semibold mb-1 ${
-                        isModerator ? "text-slate-400" : "text-slate-200"
-                    }`}
-                >
+            <div className="col-span-9">
+                <p className={`font-sans uppercase tracking-widest text-sm mb-3 ${isModerator ? "text-accent" : "text-gray-dark"}`}>
                     {participant.name}
                 </p>
-                <p className="text-slate-300 text-base whitespace-pre-wrap">
+                <p className="font-serif text-lg leading-relaxed text-gray-dark/90 whitespace-pre-wrap">
                     {message.text}
                 </p>
             </div>

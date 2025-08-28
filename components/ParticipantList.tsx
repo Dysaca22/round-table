@@ -15,52 +15,26 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
     translations,
 }) => {
     return (
-        <div className="bg-slate-900/50 rounded-lg p-4 h-full">
-            <h2 className="text-xl font-semibold text-slate-200 mb-4 border-b border-slate-700 pb-3">
+        <div>
+            <h2 className="font-sans uppercase text-lg tracking-widest border-b border-gray-light pb-3 mb-6">
                 {translations.title}
             </h2>
-            <ul className="space-y-3">
+            <ul className="space-y-6">
                 {participants.map((p) => {
                     const isSpeaking = p.id === currentSpeakerId;
                     return (
                         <li
                             key={p.id}
-                            className={`flex items-center p-2 rounded-md transition-all duration-300 ${
-                                isSpeaking ? "bg-slate-700/50" : ""
-                            }`}
-                        >
-                            <div className="relative h-10 w-10 flex-shrink-0 mr-4">
-                                <div
-                                    className={`h-10 w-10 flex items-center justify-center font-bold text-sm text-white rounded-full ${
-                                        p.id === "moderator"
-                                            ? "bg-slate-600"
-                                            : "bg-cyan-600"
-                                    }`}
-                                >
-                                    {p.avatar}
-                                </div>
-                                {isSpeaking && (
-                                    <div className="absolute inset-0 rounded-full border-2 border-cyan-400 animate-pulse"></div>
-                                )}
+                            className={`flex items-center transition-all duration-300 ${isSpeaking ? "pl-4 border-l-2 border-accent" : "pl-0 border-l-2 border-transparent"}`}>
+                            <div className="h-12 w-12 flex-shrink-0 mr-4 flex items-center justify-center border border-gray-light/80 rounded-full">
+                                <span className="font-mono text-sm text-gray-dark/80">{p.avatar}</span>
                             </div>
 
                             <div>
-                                <p
-                                    className={`font-semibold transition-colors ${
-                                        isSpeaking
-                                            ? "text-cyan-300"
-                                            : "text-slate-200"
-                                    }`}
-                                >
+                                <p className={`font-serif text-lg ${isSpeaking ? "text-gray-dark" : "text-gray-dark/80"}`}>
                                     {p.name}
                                 </p>
-                                <p
-                                    className={`text-xs capitalize transition-colors ${
-                                        isSpeaking
-                                            ? "text-slate-300"
-                                            : "text-slate-400"
-                                    }`}
-                                >
+                                <p className={`font-mono text-xs capitalize ${isSpeaking ? "text-gray-dark/70" : "text-gray-dark/50"}`}>
                                     {p.role.toLowerCase()}
                                 </p>
                             </div>

@@ -204,6 +204,7 @@ const App: React.FC = () => {
             setStatusText(t.status.errorDuring);
         }
     }, [
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         currentTurn,
         debateStatus,
         messages,
@@ -275,7 +276,9 @@ const App: React.FC = () => {
             .map((msg) => {
                 const participantName =
                     participantsMap.get(msg.participantId) || "Unknown";
-                return `${participantName}:\n${msg.text}\n`;
+                return `${participantName}:
+${msg.text}
+`;
             })
             .join("\n---\n\n");
 
@@ -292,6 +295,10 @@ const App: React.FC = () => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    };
+
+    const handleBackToSettings = () => {
+        setDebateStatus(DebateStatus.SETTINGS);
     };
 
     if (debateStatus === DebateStatus.SETTINGS) {
@@ -318,49 +325,39 @@ const App: React.FC = () => {
     const isLoading = debateStatus === DebateStatus.RUNNING && !!currentTurn;
 
     return (
-        <div className="bg-slate-900 text-slate-300 min-h-screen flex font-sans">
+        <div className="min-h-screen grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[320px_1fr] font-serif">
             {/* Sidebar */}
-            <aside className="w-80 flex-shrink-0 bg-slate-950 p-6 hidden lg:flex flex-col space-y-6">
-                <div>
-                    <h1 className="text-2xl font-bold text-white mb-1">
+            <aside className="w-full flex-shrink-0 bg-cream border-r border-gray-light p-6 md:p-8 flex flex-col space-y-8">
+                <div className="flex-grow">
+                    <h1 className="text-3xl lg:text-4xl font-sans uppercase text-gray-dark mb-2">
                         {t.app.title}
                     </h1>
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-gray-dark/60 text-sm lg:text-base font-serif">
                         {t.settings.subtitle}
                     </p>
                 </div>
-                <div className="flex-grow">
+                <div className="flex-grow-[2]">
                     <ParticipantList
                         participants={participants}
                         currentSpeakerId={currentTurn?.participantId || null}
                         translations={t.participantList}
                     />
                 </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className="flex-1 flex flex-col h-screen max-w-full overflow-hidden">
-                <header className="p-4 border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm flex-shrink-0 flex items-center justify-between gap-4">
-                    <p
-                        className="text-slate-300 text-center truncate flex-grow"
-                        title={debateTopic}
-                    >
-                        {debateTopic}
-                    </p>
+                <div className="flex-shrink-0 space-y-4">
                     <button
                         onClick={handleExportDebate}
                         disabled={messages.length === 0}
                         title={t.controls.exportDebate}
                         aria-label={t.controls.exportDebate}
-                        className="flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed"
+                        className="group flex items-center gap-2 text-sm text-gray-dark/60 hover:text-gray-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
+                            className="h-4 w-4"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
-                            strokeWidth={2}
+                            strokeWidth={1.5}
                         >
                             <path
                                 strokeLinecap="round"
@@ -368,14 +365,51 @@ const App: React.FC = () => {
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                             />
                         </svg>
+                        <span className="group-hover:underline">
+                            {t.controls.exportDebate}
+                        </span>
                     </button>
+                    <button
+                        onClick={handleBackToSettings}
+                        title={t.controls.backToSettings}
+                        aria-label={t.controls.backToSettings}
+                        className="group flex items-center gap-2 text-sm text-gray-dark/60 hover:text-gray-dark transition-colors"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 19l-7-7 7-7"
+                            />
+                        </svg>
+                        <span className="group-hover:underline">
+                            {t.controls.backToSettings}
+                        </span>
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="flex-1 flex flex-col h-screen max-w-full overflow-hidden bg-white">
+                <header className="p-4 border-b border-gray-light flex-shrink-0 flex items-center justify-center gap-4">
+                    <p
+                        className="text-gray-dark/80 text-center truncate font-serif max-w-2xl mx-auto"
+                        title={debateTopic}
+                    >
+                        {debateTopic}
+                    </p>
                 </header>
 
                 {/* Chat Area */}
-                <div className="flex-grow flex flex-col overflow-y-auto">
-                    <div className="mt-auto">
-                        {" "}
-                        {/* Aligns messages to the bottom initially */}
+                <div className="flex-grow flex flex-col overflow-y-auto p-4 sm:p-6 lg:p-8">
+                    <div className="mt-auto space-y-8 max-w-4xl w-full mx-auto">
                         {messages
                             .slice()
                             .reverse()
@@ -392,20 +426,20 @@ const App: React.FC = () => {
                 </div>
 
                 {/* Control Bar */}
-                <footer className="border-t border-slate-800 bg-slate-950/80 backdrop-blur-sm p-3 flex-shrink-0">
+                <footer className="border-t border-gray-light bg-white/80 backdrop-blur-sm p-4 flex-shrink-0">
                     {error && (
-                        <p className="text-red-400 mb-2 text-center text-sm px-4">
+                        <p className="text-red-500 mb-3 text-center text-sm font-mono px-4">
                             {error}
                         </p>
                     )}
 
-                    <div className="flex items-center justify-between gap-4 w-full max-w-4xl mx-auto">
+                    <div className="flex items-center justify-between gap-6 w-full max-w-5xl mx-auto">
                         {debateStatus === DebateStatus.RUNNING ||
                         debateStatus === DebateStatus.PAUSED ? (
                             <>
                                 <button
                                     onClick={togglePause}
-                                    className="flex items-center justify-center h-10 w-10 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="flex items-center justify-center h-10 w-10 rounded-full border border-gray-light text-gray-dark/70 hover:bg-gray-dark/5 hover:text-gray-dark transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50"
                                 >
                                     {debateStatus === DebateStatus.RUNNING ? (
                                         <svg
@@ -435,10 +469,10 @@ const App: React.FC = () => {
                                         </svg>
                                     )}
                                 </button>
-                                <div className="flex items-center justify-center flex-grow text-center text-sm text-slate-400">
+                                <div className="flex items-center justify-center flex-grow text-center text-sm font-mono text-gray-dark/60 tracking-wider">
                                     {isLoading && (
                                         <svg
-                                            className="animate-spin h-4 w-4 text-slate-400 mr-2"
+                                            className="animate-spin h-4 w-4 text-gray-dark/50 mr-3"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 24 24"
@@ -460,22 +494,36 @@ const App: React.FC = () => {
                                     )}
                                     <span>{statusText}</span>
                                 </div>
-                                <div className="text-lg font-mono text-slate-400 w-24 text-right">
+                                <div className="text-lg font-mono text-gray-dark/80 w-24 text-right">
                                     {formatTime(timeLeft)}
                                 </div>
                             </>
                         ) : (
-                            <div className="w-full flex flex-col items-center">
-                                <p className="text-slate-400 mb-2">
+                            <div className="w-full flex flex-col items-center py-4">
+                                <p className="font-serif text-gray-dark/80 mb-4">
                                     {statusText}
                                 </p>
                                 <button
                                     onClick={() =>
                                         setDebateStatus(DebateStatus.SETTINGS)
                                     }
-                                    className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-md transition-colors"
+                                    className="group inline-flex items-center font-sans uppercase tracking-widest text-sm text-gray-dark hover:text-accent transition-colors"
                                 >
-                                    {t.controls.backToSettings}
+                                    <span>{t.controls.backToSettings}</span>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4 ml-2 transform group-hover:translate-x-1 transition-transform"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                        />
+                                    </svg>
                                 </button>
                             </div>
                         )}

@@ -120,135 +120,77 @@ const Settings: React.FC<SettingsProps> = ({
     };
 
     return (
-        <div className="bg-slate-900 text-slate-300 min-h-screen p-4 sm:p-6 md:p-8">
-            <div className="max-w-4xl mx-auto">
-                <header className="text-center mb-10">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white">
+        <div className="bg-cream text-gray-dark min-h-screen flex items-center justify-center p-4 sm:p-8 lg:p-12 font-serif">
+            <div className="max-w-5xl mx-auto w-full">
+                <header className="text-center mb-16">
+                    <h1 className="text-6xl lg:text-8xl font-sans uppercase tracking-wider">
                         {t.title}
                     </h1>
-                    <p className="text-slate-400 mt-3 text-lg">{t.subtitle}</p>
+                    <p className="text-gray-dark/70 mt-4 text-lg lg:text-xl max-w-2xl mx-auto">
+                        {t.subtitle}
+                    </p>
                 </header>
 
-                <div className="space-y-8">
-                    {/* Card: AI Provider & Language */}
-                    <div className="bg-slate-800/50 rounded-lg p-6 shadow-lg border border-slate-700">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <h2 className="block text-xl font-semibold text-slate-200 mb-4">
-                                    {t.aiProvider.title}
-                                </h2>
-                                <div className="space-y-4">
-                                    <select
-                                        value={aiConfig.provider}
-                                        onChange={(e) => {
-                                            setAiConfig((prev) => ({
-                                                ...prev,
-                                                provider: e.target
-                                                    .value as AIProvider,
-                                            }));
-                                            setTestStatus("idle");
-                                        }}
-                                        className="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
-                                    >
-                                        <option value={AIProvider.GEMINI}>
-                                            Google Gemini
-                                        </option>
-                                        <option value={AIProvider.LMSTUDIO}>
-                                            LM Studio (Local)
-                                        </option>
-                                    </select>
-                                    {aiConfig.provider ===
-                                        AIProvider.GEMINI && (
-                                        <input
-                                            type="password"
-                                            placeholder={
-                                                t.aiProvider.apiKeyPlaceholder
-                                            }
-                                            value={aiConfig.apiKey}
-                                            onChange={(e) =>
-                                                setAiConfig((prev) => ({
-                                                    ...prev,
-                                                    apiKey: e.target.value,
-                                                }))
-                                            }
-                                            className="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
-                                        />
-                                    )}
-                                    {aiConfig.provider ===
-                                        AIProvider.LMSTUDIO && (
-                                        <div className="space-y-4">
-                                            <div className="flex items-center gap-2">
-                                                <label
-                                                    htmlFor="lmstudio-port"
-                                                    className="text-slate-400 font-medium"
-                                                >
-                                                    {t.aiProvider.portLabel}:
-                                                </label>
-                                                <input
-                                                    id="lmstudio-port"
-                                                    type="number"
-                                                    value={
-                                                        aiConfig.lmStudioPort
-                                                    }
-                                                    onChange={(e) =>
-                                                        setAiConfig((prev) => ({
-                                                            ...prev,
-                                                            lmStudioPort:
-                                                                parseInt(
-                                                                    e.target
-                                                                        .value,
-                                                                    10
-                                                                ) || 1234,
-                                                        }))
-                                                    }
-                                                    className="w-28 p-2 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
-                                                />
-                                            </div>
-                                            <div className="flex items-center gap-4">
-                                                <button
-                                                    onClick={
-                                                        handleTestConnection
-                                                    }
-                                                    className="bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                                                    disabled={
-                                                        testStatus === "testing"
-                                                    }
-                                                >
-                                                    {testStatus === "testing"
-                                                        ? t.aiProvider.testing
-                                                        : t.aiProvider
-                                                              .testConnection}
-                                                </button>
-                                                {testStatus !== "idle" && (
-                                                    <p
-                                                        className={`text-sm ${
-                                                            testStatus ===
-                                                            "success"
-                                                                ? "text-green-400"
-                                                                : "text-red-400"
-                                                        }`}
-                                                    >
-                                                        {testMessage}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <p className="text-slate-500 text-xs mt-3">
-                                                {t.aiProvider.lmStudioWarning}
-                                            </p>
+                <div className="space-y-12">
+                    {/* Section: Core Setup */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                        <div className="lg:col-span-1">
+                            <h2 className="font-sans uppercase text-lg tracking-widest border-b border-gray-light pb-2">
+                                {t.aiProvider.title}
+                            </h2>
+                        </div>
+                        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div className="space-y-6">
+                                <select
+                                    value={aiConfig.provider}
+                                    onChange={(e) => {
+                                        setAiConfig((prev) => ({ ...prev, provider: e.target.value as AIProvider }));
+                                        setTestStatus("idle");
+                                    }}
+                                    className="w-full p-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                >
+                                    <option value={AIProvider.GEMINI}>Google Gemini</option>
+                                    <option value={AIProvider.LMSTUDIO}>LM Studio (Local)</option>
+                                </select>
+                                {aiConfig.provider === AIProvider.GEMINI && (
+                                    <input
+                                        type="password"
+                                        placeholder={t.aiProvider.apiKeyPlaceholder}
+                                        value={aiConfig.apiKey}
+                                        onChange={(e) => setAiConfig((prev) => ({ ...prev, apiKey: e.target.value }))}
+                                        className="w-full p-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                    />
+                                )}
+                                {aiConfig.provider === AIProvider.LMSTUDIO && (
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-4">
+                                            <label htmlFor="lmstudio-port" className="font-mono text-sm whitespace-nowrap">{t.aiProvider.portLabel}:</label>
+                                            <input
+                                                id="lmstudio-port"
+                                                type="number"
+                                                value={aiConfig.lmStudioPort}
+                                                onChange={(e) => setAiConfig((prev) => ({ ...prev, lmStudioPort: parseInt(e.target.value, 10) || 1234 }))}
+                                                className="w-24 p-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                            />
                                         </div>
-                                    )}
-                                </div>
+                                        <div className="flex items-center gap-4">
+                                            <button onClick={handleTestConnection} className="font-mono text-sm border border-gray-light rounded-full px-4 py-1 hover:border-accent hover:text-accent transition-colors disabled:opacity-50" disabled={testStatus === "testing"}>
+                                                {testStatus === "testing" ? t.aiProvider.testing : t.aiProvider.testConnection}
+                                            </button>
+                                            {testStatus !== "idle" && (
+                                                <p className={`font-mono text-xs ${testStatus === "success" ? "text-green-600" : "text-red-600"}`}>
+                                                    {testMessage}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                            <div>
-                                <h2 className="block text-xl font-semibold text-slate-200 mb-4">
-                                    {t.language.label}
-                                </h2>
+                            <div className="space-y-6">
                                 <select
                                     value={language}
-                                    onChange={(e) =>
-                                        setLanguage(e.target.value as Language)
-                                    }
-                                    className="w-full p-2.5 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
+                                    onChange={(e) => setLanguage(e.target.value as Language)}
+                                    className="w-full p-2 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
                                 >
                                     <option value="en">English</option>
                                     <option value="es">Español</option>
@@ -257,217 +199,153 @@ const Settings: React.FC<SettingsProps> = ({
                         </div>
                     </div>
 
-                    {/* Card: Debate Topic */}
-                    <div className="bg-slate-800/50 rounded-lg p-6 shadow-lg border border-slate-700">
-                        <label
-                            htmlFor="debate-topic"
-                            className="block text-xl font-semibold text-slate-200 mb-3"
-                        >
-                            {t.topic.label}
-                        </label>
-                        <textarea
-                            id="debate-topic"
-                            value={debateTopic}
-                            onChange={(e) => setDebateTopic(e.target.value)}
-                            className="w-full h-24 p-3 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
-                        />
+                    <hr className="border-gray-light/50"/>
+
+                    {/* Section: Debate Topic */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                         <div className="lg:col-span-1">
+                            <h2 className="font-sans uppercase text-lg tracking-widest border-b border-gray-light py-2">
+                                {t.topic.label}
+                            </h2>
+                        </div>
+                        <div className="lg:col-span-2">
+                            <textarea
+                                id="debate-topic"
+                                value={debateTopic}
+                                onChange={(e) => setDebateTopic(e.target.value)}
+                                className="w-full h-28 p-3 bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors text-lg"
+                                placeholder="e.g., The role of AI in modern art..."
+                            />
+                        </div>
                     </div>
 
-                    {/* Card: Timings */}
-                    <div className="bg-slate-800/50 rounded-lg p-6 shadow-lg border border-slate-700">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <label
-                                    htmlFor="time-limit"
-                                    className="block text-xl font-semibold text-slate-200 mb-3"
-                                >
-                                    {t.timeLimit.label}
-                                </label>
+                    <hr className="border-gray-light/50"/>
+
+                    {/* Section: Timings */}
+                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                         <div className="lg:col-span-1">
+                            <h2 className="font-sans uppercase text-lg tracking-widest border-b border-gray-light py-2">
+                                {t.timeLimit.label}
+                            </h2>
+                        </div>
+                        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                            <div className="flex items-baseline gap-4">
                                 <input
                                     type="number"
                                     id="time-limit"
                                     value={timeLimit}
-                                    onChange={(e) =>
-                                        setTimeLimit(
-                                            Math.max(
-                                                1,
-                                                parseInt(e.target.value, 10) ||
-                                                    1
-                                            )
-                                        )
-                                    }
+                                    onChange={(e) => setTimeLimit(Math.max(1, parseInt(e.target.value, 10) || 1))}
                                     min="1"
-                                    className="w-32 p-2 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
+                                    className="w-24 p-2 text-lg bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
                                 />
+                                <label htmlFor="time-limit" className="font-mono text-sm text-gray-dark/60">{t.timeLimitDebate.label}</label>
                             </div>
-                            <div>
-                                <label
-                                    htmlFor="thinking-time"
-                                    className="block text-xl font-semibold text-slate-200 mb-3"
-                                >
-                                    {t.thinkingTime.label}
-                                </label>
+                             <div className="flex items-baseline gap-4">
                                 <input
                                     type="number"
                                     id="thinking-time"
                                     value={thinkingTime}
-                                    onChange={(e) =>
-                                        setThinkingTime(
-                                            Math.max(
-                                                0,
-                                                parseInt(e.target.value, 10) ||
-                                                    0
-                                            )
-                                        )
-                                    }
+                                    onChange={(e) => setThinkingTime(Math.max(0, parseInt(e.target.value, 10) || 0))}
                                     min="0"
                                     step="1"
-                                    className="w-32 p-2 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-colors"
+                                    className="w-24 p-2 text-lg bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
                                 />
+                                <label htmlFor="thinking-time" className="font-mono text-sm text-gray-dark/60">{t.thinkingTime.label}</label>
                             </div>
                         </div>
                     </div>
 
-                    {/* Card: Participants */}
-                    <div className="bg-slate-800/50 rounded-lg p-6 shadow-lg border border-slate-700">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-slate-200">
+                    <hr className="border-gray-light/50"/>
+
+                    {/* Section: Participants */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+                        <div className="lg:col-span-1">
+                             <h2 className="font-sans uppercase text-lg tracking-widest border-b border-gray-light py-2">
                                 {t.participants.title}
                             </h2>
-                            <button
-                                onClick={handleAddParticipant}
-                                className="bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                            >
-                                {t.participants.add}
-                            </button>
                         </div>
-                        <ul className="space-y-2">
-                            {participants.map(
-                                (p) =>
+                        <div className="lg:col-span-2">
+                            <ul className="space-y-3">
+                                {participants.map((p) =>
                                     p.role === ParticipantRole.MEMBER && (
-                                        <li
-                                            key={p.id}
-                                            className="flex items-center justify-between p-3 bg-slate-900/50 border border-slate-700 rounded-md"
-                                        >
-                                            <span className="font-medium">
-                                                {p.name}
-                                            </span>
-                                            <div>
-                                                <button
-                                                    onClick={() =>
-                                                        openEditModal(p)
-                                                    }
-                                                    className="text-cyan-400 hover:text-cyan-300 mr-4 font-semibold"
-                                                >
+                                        <li key={p.id} className="flex items-center justify-between p-2 border-b border-gray-light/50">
+                                            <span className="text-lg">{p.name}</span>
+                                            <div className="space-x-4 font-mono text-sm">
+                                                <button onClick={() => openEditModal(p)} className="text-gray-dark/60 hover:text-accent transition-colors">
                                                     {t.participants.edit}
                                                 </button>
                                                 {p.isCustom && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleRemoveParticipant(
-                                                                p.id
-                                                            )
-                                                        }
-                                                        className="text-red-500 hover:text-red-400 font-semibold"
-                                                    >
+                                                    <button onClick={() => handleRemoveParticipant(p.id)} className="text-red-600/70 hover:text-red-600 transition-colors">
                                                         {t.participants.remove}
                                                     </button>
                                                 )}
                                             </div>
                                         </li>
                                     )
-                            )}
-                        </ul>
+                                )}
+                            </ul>
+                            <button onClick={handleAddParticipant} className="font-mono text-sm border border-gray-light rounded-full px-4 py-1 hover:border-accent hover:text-accent transition-colors mt-6">
+                                {t.participants.add}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Start Button */}
-                    <div className="text-center pt-6">
+                    <div className="text-center pt-12">
                         <button
                             onClick={onStartDebate}
                             disabled={!isStartable}
-                            className="bg-cyan-600 text-white font-bold py-3 px-10 text-lg rounded-md transition-all duration-300 disabled:bg-slate-700 disabled:cursor-not-allowed enabled:hover:bg-cyan-500 enabled:hover:scale-105"
+                            className="group inline-flex items-center font-sans uppercase tracking-widest text-2xl text-gray-dark hover:text-accent transition-colors disabled:text-gray-dark/40 disabled:cursor-not-allowed"
                         >
-                            {getStartButtonText()}
+                            <span>{getStartButtonText()}</span>
+                            {!isStartable ? null : (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-3 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            )}
                         </button>
                     </div>
                 </div>
 
                 {/* Editing Modal */}
-                <div
-                    onMouseDown={closeEditModal}
-                    className={`fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 transition-opacity duration-300 ${
-                        isModalVisible
-                            ? "opacity-100"
-                            : "opacity-0 pointer-events-none"
-                    }`}
-                >
-                    <div
-                        onMouseDown={(e) => e.stopPropagation()}
-                        className={`bg-slate-800 border border-slate-700 rounded-lg shadow-2xl p-6 w-full max-w-2xl space-y-4 transition-transform duration-300 ${
-                            isModalVisible ? "scale-100" : "scale-95"
-                        }`}
-                    >
+                <div onMouseDown={closeEditModal} className={`fixed inset-0 bg-cream/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-opacity duration-300 ${isModalVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                    <div onMouseDown={(e) => e.stopPropagation()} className={`bg-white border border-gray-light/80 shadow-2xl p-8 w-full max-w-2xl space-y-6 transition-transform duration-300 ${isModalVisible ? "scale-100" : "scale-95"}`}>
                         {editingParticipant && (
                             <>
-                                <h3 className="text-2xl font-bold text-white">
+                                <h3 className="text-3xl font-sans uppercase">
                                     {t.modal.title(editingParticipant.name)}
                                 </h3>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1 text-slate-400">
-                                        {t.modal.name}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={editingParticipant.name}
-                                        onChange={(e) =>
-                                            handleUpdateParticipant(
-                                                editingParticipant.id,
-                                                "name",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="w-full p-2 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    />
+                                <div className="space-y-6 pt-4">
+                                    <div>
+                                        <label className="block font-mono text-sm mb-2 text-gray-dark/60">{t.modal.name}</label>
+                                        <input
+                                            type="text"
+                                            value={editingParticipant.name}
+                                            onChange={(e) => handleUpdateParticipant(editingParticipant.id, "name", e.target.value)}
+                                            className="w-full p-2 text-lg bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-mono text-sm mb-2 text-gray-dark/60">{t.modal.avatar}</label>
+                                        <input
+                                            type="text"
+                                            value={editingParticipant.avatar}
+                                            maxLength={2}
+                                            onChange={(e) => handleUpdateParticipant(editingParticipant.id, "avatar", e.target.value.toUpperCase())}
+                                            className="w-full p-2 text-lg bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-mono text-sm mb-2 text-gray-dark/60">{t.modal.persona}</label>
+                                        <textarea
+                                            value={editingParticipant.persona}
+                                            onChange={(e) => handleUpdateParticipant(editingParticipant.id, "persona", e.target.value)}
+                                            className="w-full h-32 p-2 text-lg bg-transparent border-b border-gray-light focus:outline-none focus:ring-0 focus:border-accent transition-colors"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1 text-slate-400">
-                                        {t.modal.avatar}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={editingParticipant.avatar}
-                                        maxLength={2}
-                                        onChange={(e) =>
-                                            handleUpdateParticipant(
-                                                editingParticipant.id,
-                                                "avatar",
-                                                e.target.value.toUpperCase()
-                                            )
-                                        }
-                                        className="w-full p-2 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium mb-1 text-slate-400">
-                                        {t.modal.persona}
-                                    </label>
-                                    <textarea
-                                        value={editingParticipant.persona}
-                                        onChange={(e) =>
-                                            handleUpdateParticipant(
-                                                editingParticipant.id,
-                                                "persona",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="w-full h-40 p-2 bg-slate-900 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    />
-                                </div>
-                                <div className="text-right pt-2">
-                                    <button
-                                        onClick={closeEditModal}
-                                        className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-md transition-colors"
-                                    >
+                                <div className="text-right pt-4">
+                                    <button onClick={closeEditModal} className="font-sans uppercase tracking-widest text-gray-dark hover:text-accent transition-colors">
                                         {t.modal.done}
                                     </button>
                                 </div>

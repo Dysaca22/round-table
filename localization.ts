@@ -6,6 +6,7 @@ const translations = {
         settings: {
             title: "Debate Configuration",
             subtitle: "Set up the topic, time, and participants for the round table.",
+            subtitleProgress: "Debate in progress...",
             aiProvider: {
                 title: "AI Provider Configuration",
                 apiKeyPlaceholder: "Enter your Google Gemini API Key",
@@ -24,7 +25,10 @@ const translations = {
                 label: "Debate Topic",
             },
             timeLimit: {
-                label: "Time Limit (minutes)",
+                label: "Time Limit",
+            },
+            timeLimitDebate: {
+                label: "Debate Time Limit (minutes)",
             },
             thinkingTime: {
                 label: "Thinking Time (seconds)",
@@ -82,6 +86,7 @@ const translations = {
         settings: {
             title: "Configuración del Debate",
             subtitle: "Define el tema, el tiempo y los participantes para la mesa redonda.",
+            subtitleProgress: "Debate en progreso...",
             aiProvider: {
                 title: "Configuración del Proveedor de IA",
                 apiKeyPlaceholder: "Introduce tu clave de API de Google Gemini",
@@ -100,7 +105,10 @@ const translations = {
                 label: "Tema del Debate",
             },
             timeLimit: {
-                label: "Límite de Tiempo (minutos)",
+                label: "Tiempo Limite",
+            },
+            timeLimitDebate: {
+                label: "Tiempo de Debate (minutos)",
             },
             thinkingTime: {
                 label: "Tiempo de Reflexión (segundos)",
