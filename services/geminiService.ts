@@ -121,7 +121,7 @@ async function callAI(
     } else {
         // LM Studio (OpenAI compatible)
         const jsonExample = createJsonExampleString(responseSchema);
-        const augmentedUserPrompt = `${userPrompt}\n\nIMPORTANT: You must respond with a single, valid JSON object that strictly follows this structure. Do not add any text, explanation, or markdown formatting before or after the JSON object.\n\nJSON Structure:\n${jsonExample}`;
+        const augmentedUserPrompt = `${userPrompt}\n\nIMPORTANT: You must respond with a single, valid JSON object that strictly follows this structure. Do not add any text, explanation, or markdown formatting before or after the JSON object.\n\nJSON Structure:\n${jsonExample}\n`;
 
         const messages = [
             { role: "system", content: systemInstruction },

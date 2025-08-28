@@ -75,7 +75,6 @@ const App: React.FC = () => {
     const [timeLeft, setTimeLeft] = useState(timeLimit * 60);
 
     const turnCount = useRef(0);
-    const MAX_TURNS = 20;
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     const t = T(language);
@@ -93,6 +92,20 @@ const App: React.FC = () => {
         ]);
     };
 
+    const handleError = (err: any, context: "start" | "turn") => {
+        console.error(err);
+        let errorMessage = t.errors.unknown;
+        if (err instanceof Error) {
+            errorMessage = err.message;
+        }
+
+        const prefix = context === "start" ? t.errors.startFailed : t.errors.general;
+        setError(`${prefix}: ${errorMessage}`);
+        setDebateStatus(DebateStatus.ERROR);
+        setStatusText(context === "start" ? t.status.errorStarting : t.status.errorDuring);
+    };
+
+
     const handleStartDebate = () => {
         setDebateStatus(DebateStatus.RUNNING);
         setStatusText(t.status.starting);
@@ -109,14 +122,7 @@ const App: React.FC = () => {
                     action: "CONTRIBUTING",
                 });
             })
-            .catch((err) => {
-                console.error(err);
-                const errorMessage =
-                    err instanceof Error ? err.message : t.errors.unknown;
-                setError(`${t.errors.startFailed}: ${errorMessage}`);
-                setDebateStatus(DebateStatus.ERROR);
-                setStatusText(t.status.errorStarting);
-            });
+            .catch((err) => handleError(err, "start"));
     };
 
     const concludeDebate = (reason: string) => {
@@ -128,11 +134,6 @@ const App: React.FC = () => {
 
     const processTurn = useCallback(async () => {
         if (!currentTurn || debateStatus !== DebateStatus.RUNNING) return;
-
-        if (turnCount.current >= MAX_TURNS) {
-            concludeDebate(t.status.concludedMaxTurns);
-            return;
-        }
 
         const currentParticipant = participants.find(
             (p) => p.id === currentTurn.participantId
@@ -196,15 +197,9 @@ const App: React.FC = () => {
                 });
             }
         } catch (err) {
-            console.error(err);
-            const errorMessage =
-                err instanceof Error ? err.message : t.errors.unknown;
-            setError(`${t.errors.general}: ${errorMessage}`);
-            setDebateStatus(DebateStatus.ERROR);
-            setStatusText(t.status.errorDuring);
+            handleError(err, "turn");
         }
-    }, [
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ 
         currentTurn,
         debateStatus,
         messages,
@@ -214,14 +209,14 @@ const App: React.FC = () => {
         aiConfig,
         t,
         thinkingTime,
+        handleError
     ]);
 
     useEffect(() => {
         if (debateStatus === DebateStatus.RUNNING && currentTurn) {
             processTurn();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debateStatus, currentTurn]);
+    }, [debateStatus, currentTurn, processTurn]);
 
     useEffect(() => {
         if (debateStatus === DebateStatus.RUNNING) {
@@ -240,7 +235,7 @@ const App: React.FC = () => {
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
-    }, [debateStatus, t.status.concludedTimeUp]);
+    }, [debateStatus, t.status.concludedTimeUp, concludeDebate]);
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -276,9 +271,7 @@ const App: React.FC = () => {
             .map((msg) => {
                 const participantName =
                     participantsMap.get(msg.participantId) || "Unknown";
-                return `${participantName}:
-${msg.text}
-`;
+                return `${participantName}:\n${msg.text}\n`;
             })
             .join("\n---\n\n");
 

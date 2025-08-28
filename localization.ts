@@ -77,6 +77,9 @@ const translations = {
             speakerNotFound: "Error: Current speaker not found.",
             invalidSpeaker: (id: string) => `Moderator selected an invalid next speaker ID: ${id}`,
             general: "An error occurred",
+            aiConnection: "Could not connect to the AI service. Please check your configuration and connection.",
+            aiResponse: "The AI returned an invalid or unparsable response.",
+            apiKey: "The configured API key is invalid or missing.",
         }
     },
     es: {
@@ -157,6 +160,9 @@ const translations = {
             speakerNotFound: "Error: No se encontró al ponente actual.",
             invalidSpeaker: (id: string) => `El moderador seleccionó un ID de ponente inválido: ${id}`,
             general: "Ocurrió un error",
+            aiConnection: "No se pudo conectar con el servicio de IA. Por favor, revisa tu configuración y conexión.",
+            aiResponse: "La IA devolvió una respuesta inválida o no analizable.",
+            apiKey: "La clave de API configurada es inválida o no existe.",
         }
     }
 };
