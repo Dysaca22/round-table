@@ -250,21 +250,40 @@ export const getMemberContribution = async (
         participant.persona + getLanguageInstruction(language);
     const userPrompt = `The debate topic is: "${topic}". Here is the debate history so far:\n${promptHistory}\n\nIt is now your turn. What is your contribution?`;
 
-    try {
-        const jsonString = await callAI(
-            aiConfig,
-            systemInstruction,
-            userPrompt,
-            memberResponseSchema
-        );
-        return parseCleanJson(jsonString);
-    } catch (e) {
-        console.error("Failed to parse member's contribution:", e);
-        const errorMessage = e instanceof Error ? e.message : "Unknown error";
-        throw new Error(
-            `Could not get member contribution due to invalid AI response: ${errorMessage}`
-        );
+    const maxRetries = 5;
+    const retryDelayMs = 1500;
+    let attempt = 0;
+    while (attempt < maxRetries) {
+        try {
+            const jsonString = await callAI(
+                aiConfig,
+                systemInstruction,
+                userPrompt,
+                memberResponseSchema
+            );
+            return parseCleanJson(jsonString);
+        } catch (e) {
+            let errorMessage = e instanceof Error ? e.message : "Unknown error";
+            if (typeof errorMessage === "string" && errorMessage.includes('503') && errorMessage.includes('overloaded')) {
+                attempt++;
+                if (attempt < maxRetries) {
+                    console.warn(`Gemini model overloaded, retrying (${attempt}/${maxRetries})...`, errorMessage);
+                    await new Promise(res => setTimeout(res, retryDelayMs));
+                    continue;
+                } else {
+                    console.warn("Gemini model overloaded, skipping this turn after retries:", errorMessage);
+                    return { contribution: "[The AI model is temporarily overloaded. Skipping this turn. Please try again later.]" };
+                }
+            }
+            // For other errors, log to console and throw only if blocking
+            console.error("Failed to parse member's contribution:", e);
+            throw new Error(
+                `BLOCKING_AI_ERROR: Could not get member contribution due to invalid AI response: ${errorMessage}`
+            );
+        }
     }
+    // Fallback, should not reach here
+    return { contribution: "[Unknown error. Skipping this turn.]" };
 };
 
 export const getModeratorDecision = async (

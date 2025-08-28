@@ -93,16 +93,26 @@ const App: React.FC = () => {
     };
 
     const handleError = (err: any, context: "start" | "turn") => {
-        console.error(err);
+        // Only show blocking errors in UI, log others to console
         let errorMessage = t.errors.unknown;
+        let isBlocking = false;
         if (err instanceof Error) {
             errorMessage = err.message;
+            if (errorMessage.startsWith("BLOCKING_AI_ERROR")) {
+                isBlocking = true;
+                // Remove the prefix for display
+                errorMessage = errorMessage.replace("BLOCKING_AI_ERROR: ", "");
+            }
         }
-
-        const prefix = context === "start" ? t.errors.startFailed : t.errors.general;
-        setError(`${prefix}: ${errorMessage}`);
-        setDebateStatus(DebateStatus.ERROR);
-        setStatusText(context === "start" ? t.status.errorStarting : t.status.errorDuring);
+        if (isBlocking) {
+            const prefix = context === "start" ? t.errors.startFailed : t.errors.general;
+            setError(`${prefix}: ${errorMessage}`);
+            setDebateStatus(DebateStatus.ERROR);
+            setStatusText(context === "start" ? t.status.errorStarting : t.status.errorDuring);
+        } else {
+            // Log non-blocking errors only
+            console.warn("Non-blocking error:", err);
+        }
     };
 
 
